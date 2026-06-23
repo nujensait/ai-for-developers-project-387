@@ -1,0 +1,443 @@
+openapi: 3.1.0
+info:
+  title: Calendar API
+  version: 1.0.0
+tags:
+  - name: EventTypes
+  - name: Availability
+  - name: Bookings
+paths:
+  /api/availability:
+    get:
+      operationId: Availability_list
+      description: Сетка слотов доступности по типу события за период.
+      parameters:
+        - name: eventTypeId
+          in: query
+          required: true
+          schema:
+            type: string
+          explode: false
+        - name: from
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date-time
+          explode: false
+        - name: to
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date-time
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TimeSlot'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+      tags:
+        - Availability
+  /api/bookings:
+    get:
+      operationId: Bookings_list
+      description: Список всех бронирований.
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Booking'
+      tags:
+        - Bookings
+    post:
+      operationId: Bookings_create
+      description: Создать бронирование. Конфликт слота возвращает 409.
+      parameters: []
+      responses:
+        '201':
+          description: The request has succeeded and a new resource has been created as a result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Booking'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConflictError'
+      tags:
+        - Bookings
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBooking'
+  /api/bookings/{id}:
+    get:
+      operationId: Bookings_read
+      description: Получить бронирование по id.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Booking'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+      tags:
+        - Bookings
+    delete:
+      operationId: Bookings_delete
+      description: Удалить бронирование.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+      tags:
+        - Bookings
+  /api/event-types:
+    get:
+      operationId: EventTypes_list
+      description: Список всех типов событий.
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EventType'
+      tags:
+        - EventTypes
+    post:
+      operationId: EventTypes_create
+      description: Создать тип события.
+      parameters: []
+      responses:
+        '201':
+          description: The request has succeeded and a new resource has been created as a result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventType'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+      tags:
+        - EventTypes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateEventType'
+  /api/event-types/{id}:
+    get:
+      operationId: EventTypes_read
+      description: Получить тип события по id.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventType'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+      tags:
+        - EventTypes
+    put:
+      operationId: EventTypes_update
+      description: Обновить тип события.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventType'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+      tags:
+        - EventTypes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateEventType'
+    delete:
+      operationId: EventTypes_delete
+      description: Удалить тип события.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+      tags:
+        - EventTypes
+components:
+  schemas:
+    ApiError:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          description: Машиночитаемый код, напр. `NOT_FOUND`, `CONFLICT`, `VALIDATION_ERROR`.
+        message:
+          type: string
+          description: Человекочитаемое сообщение.
+      description: Унифицированный формат ошибки.
+    Booking:
+      type: object
+      required:
+        - id
+        - eventTypeId
+        - guestName
+        - guestEmail
+        - startTime
+        - endTime
+        - createdAt
+      properties:
+        id:
+          type: string
+          description: Уникальный идентификатор, напр. `bok_abc123`.
+        eventTypeId:
+          type: string
+          description: Идентификатор типа события.
+        guestName:
+          type: string
+          maxLength: 100
+          description: Имя гостя.
+        guestEmail:
+          type: string
+          format: email
+          description: Email гостя.
+        startTime:
+          type: string
+          format: date-time
+          description: Начало встречи (UTC, ISO 8601).
+        endTime:
+          type: string
+          format: date-time
+          description: Конец встречи (UTC, ISO 8601), вычисляется из длительности.
+        createdAt:
+          type: string
+          format: date-time
+          description: Момент создания брони (UTC, ISO 8601).
+      description: Бронирование слота гостем.
+    ConflictError:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+    CreateBooking:
+      type: object
+      required:
+        - eventTypeId
+        - guestName
+        - guestEmail
+        - startTime
+      properties:
+        eventTypeId:
+          type: string
+        guestName:
+          type: string
+          maxLength: 100
+        guestEmail:
+          type: string
+          format: email
+        startTime:
+          type: string
+          format: date-time
+          description: Начало встречи (UTC, ISO 8601).
+      description: Тело запроса для создания брони.
+    CreateEventType:
+      type: object
+      required:
+        - title
+        - duration
+      properties:
+        title:
+          type: string
+          maxLength: 100
+        description:
+          type: string
+          maxLength: 500
+        duration:
+          type: number
+          enum:
+            - 15
+            - 30
+            - 45
+            - 60
+            - 90
+            - 120
+      description: Тело запроса для создания/обновления типа события.
+    EventType:
+      type: object
+      required:
+        - id
+        - title
+        - duration
+      properties:
+        id:
+          type: string
+          description: Уникальный идентификатор, напр. `evt_abc123`.
+        title:
+          type: string
+          maxLength: 100
+          description: Название типа события.
+        description:
+          type: string
+          maxLength: 500
+          description: Необязательное описание.
+        duration:
+          type: number
+          enum:
+            - 15
+            - 30
+            - 45
+            - 60
+            - 90
+            - 120
+          description: Длительность встречи в минутах.
+      description: Тип события (длительность встречи), который публикует владелец календаря.
+    NotFoundError:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+    TimeSlot:
+      type: object
+      required:
+        - start
+        - end
+        - isAvailable
+      properties:
+        start:
+          type: string
+          format: date-time
+          description: Начало слота (UTC, ISO 8601).
+        end:
+          type: string
+          format: date-time
+          description: Конец слота (UTC, ISO 8601).
+        isAvailable:
+          type: boolean
+          description: Свободен ли слот.
+      description: Временной слот в сетке доступности.
+    ValidationError:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+servers:
+  - url: http://localhost:8081
+    description: Local development server
+    variables: {}

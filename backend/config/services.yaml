@@ -1,0 +1,27 @@
+parameters:
+    app.working_hours_start: '%env(int:APP_WORKING_HOURS_START)%'
+    app.working_hours_end: '%env(int:APP_WORKING_HOURS_END)%'
+    app.availability_days: '%env(int:APP_AVAILABILITY_DAYS)%'
+    app.slot_interval: 30
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        bind:
+            int $workingHoursStart: '%app.working_hours_start%'
+            int $workingHoursEnd: '%app.working_hours_end%'
+            int $availabilityDays: '%app.availability_days%'
+            int $slotInterval: '%app.slot_interval%'
+            bool $debug: '%kernel.debug%'
+
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/DTO/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'
+
+    App\Controller\:
+        resource: '../src/Controller/'
+        tags: ['controller.service_arguments']

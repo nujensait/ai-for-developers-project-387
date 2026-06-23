@@ -4,8 +4,13 @@
 
 Проект разработан в рамках курса [**Hexlet AI для разработчиков**](https://ru.hexlet.io/programs/ai-for-developers).
 
+**Это вторая версия проекта - с новыми доработками по принципам ZeroCode, см. [задачи на разработку второй версии - TZ_2_HUMAN.pdf](doc/TZ_2_HUMAN.pdf)**
+
+**Первая (MVP) версия проекта "Календарь" - тут:
+https://github.com/nujensait/ai-for-developers-project-387**
+
 ### Hexlet tests and linter status:
-[![Actions Status](https://github.com/nujensait/ai-for-developers-project-386/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/nujensait/ai-for-developers-project-386/actions)
+[![Actions Status](https://github.com/nujensait/ai-for-developers-project-387/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/nujensait/ai-for-developers-project-387/actions)
 
 ---
 
